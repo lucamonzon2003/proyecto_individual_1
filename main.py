@@ -4,9 +4,9 @@ from class_functions import func_x_endpoints
 app = FastAPI()
 class_functions = func_x_endpoints()
 
-@app.get("/")
-async def read_root():
-    return {"message": "Hello, World"}
+@app.get("/{num}")
+async def read_root(num : int):
+    return {"message": num}
 
 @app.get("/PTG/genero/{genero}")
 def PlayTimeGenre (genero):
@@ -16,14 +16,14 @@ def PlayTimeGenre (genero):
 def UserForGenre (genero):
     return class_functions.UserForGenre(genero)
 
-@app.get("/UR/año/{año}")
-def UsersRecommend (año):
-    return class_functions.UsersRecommend(año)
+@app.get("/UR/anio/{anio}")
+def UsersRecommend (anio : int):
+    return class_functions.UsersRecommend(anio)
 
-@app.get("/UNR/año/{año}")
-def UsersNotRecommend (año):
-    return class_functions.UsersNotRecommend(año)
+@app.get("/UNR/anio/{anio}")
+def UsersNotRecommend (anio : int):
+    return class_functions.UsersNotRecommend(anio)
 
-@app.get("/SA/año/{año}")
-def sentiment_analysis (año):
-    return class_functions.sentiment_analysis(año)
+@app.get("/SA/anio/{anio}")
+def sentiment_analysis (anio : int):
+    return class_functions.sentiment_analysis(anio)

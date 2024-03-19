@@ -26,37 +26,36 @@ class func_x_endpoints:
         games_gnr = games_gnr[games_gnr['genres'] == genero]
         
         # Fusionar los DataFrames de los elementos de usuario y juegos basados en el nombre del juego y la aplicación
-        res = pd.merge(self.user_items_df, games_gnr, left_on='item_name', right_on='app_name', how='inner')
+        games_gnr = pd.merge(self.user_items_df, games_gnr, left_on='item_name', right_on='app_name', how='inner')
         
         # Filtrar las fechas de lanzamiento desconocidas y convertirlas al tipo de datos datetime
-        res = res[res['release_date'] != 'Unknown']
-        res['release_date'] = pd.to_datetime(res['release_date'])
+        games_gnr = games_gnr[games_gnr['release_date'] != 'Unknown']
+        games_gnr['release_date'] = pd.to_datetime(games_gnr['release_date'])
         
         # Agrupar por steam_id y año de la fecha de lanzamiento, sumar las horas jugadas y restablecer el índice
-        res_group = res[['user_id', 'steam_id', 'release_date', 'playtime_forever']]
-        res_group = res_group.groupby(['steam_id', pd.Grouper(key='release_date', freq='YE')]).sum().reset_index()
+        games_gnr = games_gnr[['user_id', 'steam_id', 'release_date', 'playtime_forever']]
+        games_gnr = games_gnr.groupby(['steam_id', 'user_id', pd.Grouper(key='release_date', freq='YE')]).sum().reset_index()
         
         # Agrupar por steam_id, sumar las horas jugadas y restablecer el índice
-        user_rank = res_group[['user_id', 'steam_id', 'playtime_forever']]
-        user_rank = user_rank.groupby(['steam_id']).sum().reset_index()
+        user_rank = games_gnr[['user_id', 'steam_id', 'playtime_forever']]
+        user_rank = user_rank.groupby(['user_id', 'steam_id']).sum().reset_index()
         
         # Ordenar por horas jugadas en orden descendente y seleccionar la primera fila
         user_rank = user_rank.sort_values(by='playtime_forever', ascending=False)
         user_rank = user_rank.iloc[0]
         
         # Obtener el DataFrame del usuario con más horas jugadas
-        user_group = res_group[res_group['steam_id'] == user_rank['steam_id']]
+        user_year = games_gnr[games_gnr['steam_id'] == user_rank['steam_id']]
         # Extraer el año de la fecha de lanzamiento y convertirla a año
-        user_group['release_date'] = user_group['release_date'].dt.year
+        user_year['release_date'] = user_year['release_date'].dt.year
         
-        # Convertir el DataFrame a un diccionario con el año como clave y las horas jugadas como valor
-        dicc_playtime = user_group.set_index('release_date')['playtime_forever'].to_dict()
+        # Convertir el DataFrame con el año como clave y las horas jugadas como valor
+        dicc_playtime = user_year.set_index('release_date')['playtime_forever'].to_dict()
         
-        # Crear una lista de diccionarios con el año y las horas jugadas
+        # # Crear una lista de diccionarios con el año y las horas jugadas
         list_dicc = [{'Año': fecha, 'Horas': horas} for fecha, horas in dicc_playtime.items()]
-        
         # Devolver un diccionario con el usuario con más horas jugadas para el género dado y las horas jugadas por año
-        return {f'Usuario con más horas jugadas para Género X {genero}': user_rank['user_id'], 'Horas jugadas': list_dicc}
+        return  {f'Usuario con más horas jugadas para Género X {genero}': user_rank['user_id'], 'Horas jugadas': list_dicc}
     def UsersRecommend(self, año: int):
         reviews = self.reviews_df[self.reviews_df['posted'].dt.year == año]
         cond = (reviews['recommend'] == True) & (reviews['feeling'] >= 1)
