@@ -1,10 +1,9 @@
 import pandas as pd
 import numpy as np
-from memory_profiler import profile
 
 class func_x_endpoints:
     @staticmethod
-    @profile
+
     def PlayTimeGenre(genero: str):
         max_playtime_year = None
         # Leer los archivos de juegos en lotes
@@ -38,7 +37,6 @@ class func_x_endpoints:
             
         return {f"Año de lanzamiento con más horas jugadas para el Género {genero}": max_playtime_year}
     
-    @profile
     def UserForGenre( genero: str):
         # Explorar los géneros para obtener un DataFrame con cada juego repetido por cada género al que pertenece
         games_gnr = pd.DataFrame(pd.read_parquet("./data_transformed/games.parquet")).explode('genres')
@@ -76,7 +74,7 @@ class func_x_endpoints:
         list_dicc = [{'Año': fecha, 'Horas': horas} for fecha, horas in dicc_playtime.items()]
         # Devolver un diccionario con el usuario con más horas jugadas para el género dado y las horas jugadas por año
         return  {f'Usuario con más horas jugadas para Género X {genero}': user_rank['user_id'], 'Horas jugadas': list_dicc}
-    @profile
+
     def UsersRecommend( año: int):
         reviews = pd.DataFrame(pd.read_parquet("./data_transformed/reviews.parquet"))
         reviews = reviews[reviews['posted'].dt.year == año]
@@ -87,7 +85,7 @@ class func_x_endpoints:
         rank_games = rank_games['item_name'].unique()
         res = [{"Puesto " + str(i+1): valor} for i, valor in enumerate(rank_games)]
         return res
-    @profile
+
     def UsersNotRecommend( año: int):
         reviews = pd.DataFrame(pd.read_parquet("./data_transformed/reviews.parquet"))
         reviews = reviews[reviews['posted'].dt.year == año]
@@ -98,7 +96,7 @@ class func_x_endpoints:
         rank_games = rank_games['item_name'].unique()
         res = [{"Puesto " + str(i+1): valor} for i, valor in enumerate(rank_games)]
         return res
-    @profile
+
     def sentiment_analysis( año: int):
         games = pd.DataFrame(pd.read_parquet("./data_transformed/games.parquet"))
         games = games[games['release_date'] != 'Unknown']

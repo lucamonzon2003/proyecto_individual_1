@@ -9,21 +9,20 @@ async def read_root(num : int):
 
 @app.get("/PTG/genero/{genero}")
 def PlayTimeGenre (genero):
-    return PlayTimeGenre(genero)
+    return func_x_endpoints.PlayTimeGenre(genero)
 
 @app.get("/UFG/genero/{genero}")
 def UserForGenre (genero):
-
-    return UserForGenre(genero)
+    return func_x_endpoints.UserForGenre(genero)
 
 @app.get("/UR/anio/{anio}")
 def UsersRecommend (anio : int):
-    return UsersRecommend(anio)
+    return func_x_endpoints.UsersRecommend(anio)
 
 @app.get("/UNR/anio/{anio}")
 def UsersNotRecommend (anio : int):
-    return UsersNotRecommend(anio)
+    return func_x_endpoints.UsersNotRecommend(anio)
 
 @app.get("/SA/anio/{anio}")
 def sentiment_analysis (anio : int):
-    return sentiment_analysis(anio)
+    return func_x_endpoints.sentiment_analysis(anio)
