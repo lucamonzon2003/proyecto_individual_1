@@ -35,7 +35,7 @@ class func_x_endpoints:
                         max_playtime_year = current_max_year
                 del games_gnr
             
-        return {f"Año de lanzamiento con más horas jugadas para el Género {genero}": max_playtime_year}
+        return [{f"Año de lanzamiento con más horas jugadas para el Género {genero}": max_playtime_year}]
     
     def UserForGenre( genero: str):
 
