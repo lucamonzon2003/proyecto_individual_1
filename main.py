@@ -9,7 +9,10 @@ async def read_root(num : int):
 
 @app.get("/PTG/genero/{genero}")
 def PlayTimeGenre (genero):
-    return func_x_endpoints.PlayTimeGenre(genero)
+    try: 
+        return func_x_endpoints.PlayTimeGenre(genero)
+    except:
+        return KeyError
 
 @app.get("/UFG/genero/{genero}")
 def UserForGenre (genero):
