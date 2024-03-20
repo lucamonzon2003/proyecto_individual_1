@@ -5,8 +5,6 @@ from class_functions import func_x_endpoints
 
 app = FastAPI()
 
-df_recomendacion_juego = pd.read_csv('df_recomendacion_juego.csv', header=0)
-
 @app.get("/{num}")
 async def read_root(num : int):
     return {"message": num}
